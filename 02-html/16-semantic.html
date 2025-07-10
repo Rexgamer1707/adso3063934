@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16-semantic</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="../css/master.css">
+    <style>
+        header {
+            background-color: blueviolet;
+            height: 25px;
+            width: 100%;
+            text-align: center;
+        }
+
+        nav {
+            background-color: brown;
+            height: 25px;
+            width: 100%;
+            text-align: center;
+        }
+
+        section {
+            background-color: red;
+            width: 60px;
+            text-align: center;
+            display: inline-flex;
+            padding: 10px;
+        }
+
+        article {
+            background-color: yellow;
+            width: 100px;
+            text-align: center;
+            display: inline-flex;
+            padding: 60px;
+        }
+
+        aside {
+            background-color: aqua;
+            width: 40px;
+            text-align: center;
+            float: right;
+            padding: 100px 84px 325px;
+            top: 0%;
+            display: inline-flex;
+        }
+
+        footer {
+            background-color: green;
+            height: 25px;
+            width: 100%;
+            text-align: center;
+        }
+
+        content-left {
+            color: black;
+            padding: 40px;
+            width: 60%;
+        }
+
+        content-right {
+            color: blue;
+            padding: 80px;
+            width: 40%;
+        }
+    </style>
+</head>
+
+<body class="html">
+    <nav class="nav">
+        <a href="index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                <path
+                    d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+            </svg>
+        </a>
+    </nav>
+    <main>
+        <header class="header1">
+            <h1>16-semantic</h1>
+            <h2>Defines layout with semantic tags (new style).</h2>
+        </header>
+        <main>
+            <header>header</header>
+            <nav>Nav</nav>
+            <section>
+                <aside class="content-left">
+                    <section>Section</section>
+                    <article>Article</article>
+                </aside>
+                <aside class="content-right">
+                    <aside>Aside</aside>
+                </aside>
+            </section>
+            <footer>Footer</footer>
+        </main>
+    </main>
+</body>
+
+</html>
