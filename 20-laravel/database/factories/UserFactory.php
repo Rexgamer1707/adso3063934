@@ -24,21 +24,21 @@ class UserFactory extends Factory
     public function definition(): array
     {
         $gender = fake()->randomElement(array('Female', 'Male'));
-        $name = ($gender == 'Female') ? $name = fake()->firstNameFemale()
-            : $name = fake()->firstNameMale();
+        $name = ($gender == 'Female') ? $name = fake() -> firstNameFemale() 
+                                      : $name = fake() -> firstNameMale();
         ($gender == 'Female') ? $g = 'girl' : $g = 'boy';
         $id = fake()->numerify('75######');
-        copy('https://avatar.iran.liara.run/public/' . $g, public_path('images/' . $id . '.png'));
+        copy('https://avatar.iran.liara.run/public/'.$g, public_path('images/'.$id.'.png'));
         return [
             'document' => $id,
-            'fullname' => $name . " " . fake()->lastName(),
-            'gender' => $gender,
-            'birthdate' => fake()->dateTimeBetween('1974-01-01', '2004-12-31'),
-            'photo' => $id . '.png',
+            'fullname' => $name. " " .fake()->lastName(),
+            'gender'=>  $gender,
+            'birthdate' => fake()->dateTimeBetween('1974-01-01','2004-12-31'),
+            'photo' => $id.'.png',
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->numerify('320######'),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('12345'),
+            'password' => static:: $password ??= Hash::make('12345'),
             'remember_token' => Str::random(10)
         ];
     }
@@ -48,8 +48,8 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
-        ]);
-    }
+   ]);
+}
 }
