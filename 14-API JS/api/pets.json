@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "name": "Firulais",
+    "kind": "Dog",
+    "breed": "French Bulldog",
+    "image": "dog.svg",
+    "weight": "12",
+    "age": "4",
+    "location": "Manizales",
+    "description": "Friendly dog"
+  },
+  {
+    "id": 2,
+    "name": "Misu",
+    "kind": "Cat",
+    "breed": "Siamese",
+    "image": "no-photo.svg",
+    "weight": "4",
+    "age": "2",
+    "location": "Medellín",
+    "description": "Playful cat"
+  }
+]

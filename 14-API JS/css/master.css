@@ -1,0 +1,536 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+NZ+Basic:wght@100..400&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Playwrite NZ Basic", system-ui;
+    color: #f0f4f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    min-height: 100dvh;
+    background: radial-gradient(1100px 600px at 20% 20%, #2a2a2a 0%, #1f1f1f 45%, #161616 100%);
+}
+
+
+main {
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    display: none;
+    background: linear-gradient(180deg, #f06c74 0%, #d8546b 100%);
+    zoom: 1.25;
+    height: 514px;
+    width: 242px;
+    position: relative;
+    overflow-y: auto;
+    border-radius: 8px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, .45);
+    outline: 1px solid rgba(0, 0, 0, .35);
+}
+
+main.hide {
+    display: none;
+}
+
+main#login {
+    background: url(../imgs/bg-login.png);
+    background-size: cover;
+    border: 1px solid rgba(0, 0, 0, .35);
+}
+
+main#login form {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 10rem 1rem;
+}
+
+main#login form label {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+main#login form input {
+    border: 2px solid white;
+    color: black;
+    font-family: "Playwrite NZ Basic", system-ui;
+    border-radius: 4px;
+    height: 32px;
+    width: 185px;
+}
+
+main#login form input::placeholder {
+    color: rgba(124, 124, 124, 0.71);
+}
+
+main#login form button {
+    background-color: #97F96D;
+    border: 2px solid #000000;
+    border-radius: 4px;
+    font-family: "Playwrite NZ Basic", system-ui;
+    color: black;
+    width: 102px;
+    height: 27px;
+    transition: transform 0.2s ease-in;
+}
+
+main#login form button:hover {
+    transform: scale(1.05);
+}
+
+main header {
+    background-color: #ff7176;
+    border-radius: 8px 8px 0 0;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    width: 242px;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    z-index: 10;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+}
+
+
+/* DASHBOARD */
+
+
+/* DASHBOARD usa el mismo tamaño que login */
+main#dashboard {
+    background: linear-gradient(180deg, #f06c74 0%, #d8546b 100%);
+}
+
+/* HEADER igual al login */
+main#dashboard header {
+    background-color: #ff7176;
+    border-radius: 8px 8px 0 0;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 242px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+}
+
+main#dashboard header img {
+    height: 32px;
+}
+
+/* NAV BOTONES */
+main#dashboard>nav {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 242px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.3rem 0.5rem;
+    z-index: 15;
+}
+
+main#dashboard>nav a img {
+    height: 22px;
+}
+
+/* TITULO */
+main#dashboard h2 {
+    margin-top: 80px;
+    padding-left: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+/* LISTA */
+main#dashboard section.list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem 0.6rem 0.8rem;
+}
+
+/* CARD */
+main#dashboard .row {
+    display: flex;
+    align-items: center;
+    background: #f0e9ea;
+    border-radius: 8px;
+    padding: 0.4rem 0.45rem;
+    gap: 0.45rem;
+    border: 1px solid rgba(0, 0, 0, .12);
+}
+
+/* FOTO */
+main#dashboard .row img {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+/* TEXTO */
+main#dashboard .data {
+    flex: 1;
+}
+
+main#dashboard .data h3 {
+    font-size: 0.7rem;
+    margin-bottom: 0.05rem;
+    color: #000000;
+}
+
+main#dashboard .data h4 {
+    font-size: 0.55rem;
+    color: #555;
+}
+
+/* ACCIONES */
+main#dashboard .actions {
+    display: flex;
+    gap: 0.15rem;
+}
+
+main#dashboard .actions a {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    background: #FFA4B5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 9px;
+}
+
+/* ICONOS */
+.btnShow::before {
+    content: "👁️";
+}
+
+.btnEdit::before {
+    content: "✏️";
+}
+
+.btnDelete::before {
+    content: "🗑";
+}
+
+/* PANTALLA ADD */
+main#add {
+    background: linear-gradient(180deg, #f06c74 0%, #d8546b 100%);
+}
+
+/* HEADER */
+main#add header {
+    background: #ff7176;
+    border-radius: 8px 8px 0 0;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 242px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    z-index: 20;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+}
+
+main#add header h1 {
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+
+main#add header .back,
+main#add header .plus {
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* FORM */
+main#add form {
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 0.8rem 0.7rem 0.9rem;
+}
+
+main#add label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8rem;
+    gap: 0.2rem;
+}
+
+main#add input {
+    height: 32px;
+    border-radius: 6px;
+    border: 1.5px solid rgba(0, 0, 0, .28);
+    padding: 0.25rem 0.5rem;
+    font-family: "Playwrite NZ Basic";
+    background: #efb0ba;
+    color: #2b2b2b;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
+}
+
+/* BOTONES */
+main#add .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.8rem;
+}
+
+main#add .save {
+    background: #19b92a;
+    border: 2px solid #0e5c16;
+    border-radius: 6px;
+    width: 104px;
+    height: 34px;
+    font-family: "Playwrite NZ Basic";
+    color: #e9fff0;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, .25);
+}
+
+main#add .cancel {
+    background: #e23737;
+    border: 2px solid #8b1717;
+    border-radius: 6px;
+    width: 104px;
+    height: 34px;
+    font-family: "Playwrite NZ Basic";
+    color: #ffecec;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, .25);
+}
+
+/* SHOW */
+main#show {
+    background: linear-gradient(180deg, #f06c74 0%, #d8546b 100%);
+}
+
+/* HEADER */
+main#show header {
+    background: #ff7176;
+    border-radius: 8px 8px 0 0;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 242px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    z-index: 20;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+}
+
+main#show header h1 {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+/* CONTENIDO */
+.showContent {
+    margin-top: 60px;
+    padding: 0.7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* FOTO */
+.showContent .photo {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 6px;
+    align-self: center;
+}
+
+/* CAMPOS */
+.field {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    border-bottom: 2px solid #00000055;
+    padding-bottom: 2px;
+}
+
+.field.column {
+    flex-direction: column;
+    align-items: flex-start;
+    border-bottom: none;
+}
+
+.field label {
+    font-size: 0.8rem;
+    min-width: 40px;
+}
+
+.field input {
+    flex: 1;
+    height: 28px;
+    border-radius: 6px;
+    border: 1.5px solid rgba(0, 0, 0, .28);
+    background: #efb0ba;
+    font-family: "Playwrite NZ Basic";
+    padding: 0 6px;
+    color: #2b2b2b;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
+}
+
+.field textarea {
+    width: 100%;
+    height: 56px;
+    border-radius: 6px;
+    border: 1.5px solid rgba(0, 0, 0, .28);
+    background: #efb0ba;
+    font-family: "Playwrite NZ Basic";
+    resize: none;
+    padding: 6px;
+    color: #2b2b2b;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
+}
+
+/* EDIT */
+main#edit {
+    background: linear-gradient(180deg, #f06c74 0%, #d8546b 100%);
+}
+
+/* HEADER */
+main#edit header {
+    background: #ff7176;
+    border-radius: 8px 8px 0 0;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 242px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    z-index: 20;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .15);
+}
+
+main#edit header h1 {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.iconEdit {
+    font-size: 18px;
+}
+
+/* CONTENIDO */
+.editContent {
+    margin-top: 60px;
+    padding: 0.7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+/* FOTO */
+.photoEdit {
+    width: 90px;
+    height: 90px;
+    border-radius: 6px;
+    object-fit: cover;
+    align-self: center;
+}
+
+/* BOTON FOTO */
+.btnPhoto {
+    align-self: center;
+    background: #8cff6c;
+    border: 2px solid black;
+    border-radius: 4px;
+    font-size: 0.6rem;
+    padding: 2px 6px;
+}
+
+/* INPUTS */
+main#edit label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.7rem;
+}
+
+main#edit input {
+    height: 28px;
+    border-radius: 6px;
+    border: 1.5px solid rgba(0, 0, 0, .28);
+    background: #efb0ba;
+    font-family: "Playwrite NZ Basic";
+    padding: 0 6px;
+    color: #2b2b2b;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35);
+}
+
+/* BOTONES */
+.editButtons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.6rem;
+}
+
+.agree {
+    background: #16b516;
+    border: 2px solid #0d5b0d;
+    border-radius: 6px;
+    width: 94px;
+    height: 34px;
+    font-family: "Playwrite NZ Basic";
+    color: #eaffea;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, .25);
+}
+
+.cancelEdit {
+    background: #e23737;
+    border: 2px solid #8b1717;
+    border-radius: 6px;
+    width: 94px;
+    height: 34px;
+    font-family: "Playwrite NZ Basic";
+    color: #ffecec;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, .25);
+}
+.animateView {
+    animation: animateView 0.4s ease-out forwards;
+}
+
+@keyframes animateView {
+    0% {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

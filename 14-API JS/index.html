@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API js: larapets</title>
+    <link rel="stylesheet" href="css/master.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.18/dist/sweetalert2.min.css">
+</head>
+
+<body>
+    <!-- View: Login -->
+    <main id="login">
+        <!-- title-login -->
+        <header>
+            <img src="imgs/title-login.png" alt="Login">
+        </header>
+        <form id="loginForm">
+            <label for="email">
+                Email:
+                <input type="email" id="email" name="email" placeholder="example@gmail.com">
+            </label>
+            <label for="password">
+                Password:
+                <input type="password" id="password" name="password" placeholder="your secret">
+            </label>
+            <button class="btnLogin">login</button>
+        </form>
+    </main>
+
+    <main id="dashboard">
+        <header>
+            <img src="imgs/title-dashboard.png" alt="Dashboard">
+        </header>
+        <nav>
+            <a href="javascript:;" class="btnAdd">
+                <img src="imgs/Add btn.png" alt="Add">
+            </a>
+            <a href="javascript:;" class="btnLogout">
+                <img src="imgs/Logout btn.png" alt="Logout">
+            </a>
+        </nav>
+        <h2>Pet list</h2>
+        <section class="list">
+        </section>
+    </main>
+
+    <main id="add">
+        <header>
+            <h1>Add Pet</h1>
+            <a href="javascript:;" class="btnCancel">✖</a>
+        </header>
+
+        <form id="addForm">
+            <div class="editContent">
+                <img id="addPhotoPreview" src="imgs/no-photo.svg" class="photoEdit">
+            </div>
+
+            <label>
+                Photo
+                <input type="file" id="addImage" name="image" accept="image/*">
+            </label>
+
+            <label>
+                Name
+                <input type="text" id="addName" name="name">
+            </label>
+
+            <label>
+                Kind
+                <input type="text" id="addKind" name="kind">
+            </label>
+
+            <label>
+                Weight
+                <input type="text" id="addWeight" name="weight">
+            </label>
+
+            <label>
+                Age
+                <input type="text" id="addAge" name="age">
+            </label>
+
+            <label>
+                Breed
+                <input type="text" id="addBreed" name="breed">
+            </label>
+
+            <label>
+                Location
+                <input type="text" id="addLocation" name="location">
+            </label>
+
+            <label>
+                Description
+                <textarea id="addDescription" name="description"></textarea>
+            </label>
+
+            <div class="actions">
+                <button type="button" id="btnAddPet" class="save">Add Pet</button>
+                <button type="button" class="cancelEdit btnCancel">Cancel</button>
+            </div>
+        </form>
+    </main>
+
+
+    <main id="show">
+        <header>
+            <a href="javascript:;" class="btnBack">
+                <img src="imgs/btn-back.svg" alt="Back">
+            </a>
+            <img src="imgs/title-show.svg" alt="Show">
+        </header>
+
+        <section class="data">
+            <img src="imgs/dog.svg" class="pet-img" alt="Pet">
+
+            <div class="info-row">
+                <span>Name:</span>
+                <p>Firulais</p>
+            </div>
+
+            <div class="info-row">
+                <span>Kind:</span>
+                <p>Dog</p>
+            </div>
+
+            <div class="info-row">
+                <span>Age:</span>
+                <p>4 years</p>
+            </div>
+
+            <div class="info-row">
+                <span>Weight:</span>
+                <p>12.4 Kls</p>
+            </div>
+
+            <div class="info-row">
+                <span>Breed:</span>
+                <p>German Shepherd</p>
+            </div>
+
+            <div class="info-row">
+                <span>Location:</span>
+                <p>Manizales</p>
+            </div>
+
+            <h3 class="desc-title">Description:</h3>
+            <p class="description">
+                This dog has a curious and slightly worried expression. It has short, light brown fur, big round eyes
+                that look up attentively, and floppy ears that hang to the sides. Its nose is dark and shiny, and its
+                head is tilted a little, giving it a sweet, innocent, and almost funny look. Overall, the dog looks
+                friendly, gentle, and very expressive, as if it’s reacting to a sound or waiting for attention. 🐶💜
+            </p>
+        </section>
+    </main>
+
+    <main id="edit">
+        <header>
+            <a href="javascript:;" class="btnBack">
+                <img src="imgs/btn-back.svg" alt="Back">
+            </a>
+            <img src="imgs/title-edit.svg" alt="Add">
+        </header>
+        <form action="">
+            <div class="editContent">
+                <img id="editPhoto" src="imgs/no-photo.svg" class="photoEdit" alt="Pet photo">
+            </div>
+            <input type="hidden" id="editOriginImage" name="originimage" value="">
+            <label for="image">
+                Photo
+                <input type="file" id="editImage" name="image" accept="image/*">
+            </label>
+            <label for="name">
+                Name
+                <input type="text" id="editName" name="name" placeholder="Enter name">
+            </label>
+            <label for="kind">
+                Kind
+                <input type="text" id="editKind" name="kind" placeholder="Enter kind">
+            </label>
+            <label for="weight">
+                Weight
+                <input type="text" id="editWeight" name="weight" placeholder="12">
+            </label>
+            <label for="age">
+                Age
+                <input type="text" id="editAge" name="age" placeholder="12 months">
+            </label>
+            <label for="bread">
+                Breed
+                <input type="text" id="editBreed" name="breed" placeholder="bulldog">
+            </label>
+            <label for="location">
+                Location
+                <input type="text" id="editLocation" name="location" placeholder="Manizales">
+            </label>
+            <label for="location">
+                Description
+                <textarea id="editDescription" name="description" placeholder="Feed only chicken parts"></textarea>
+            </label>
+            <div class="actions editButtons">
+                <button type="button" id="btnAgree" class="agree">Agree</button>
+                <button type="button" class="cancelEdit btnCancels">Cancel</button>
+            </div>
+
+        </form>
+    </main>
+
+
+    <script src="js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.18/dist/sweetalert2.all.min.js"></script>
+</body>
+
+</html>
