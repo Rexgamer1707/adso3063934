@@ -1,0 +1,19 @@
+import { stackServerApp } from "@/stack/server";
+import { redirect } from "next/navigation";
+import { SignOut } from "@phosphor-icons/react/dist/ssr"; // Versión para Server Components
+import Link from "next/link";
+import SideBar from "@/component/SideBar";
+
+export default async function DashboardPage(    {children}: {children: React.ReactNode}) {
+    const user = await stackServerApp.getUser();
+
+    if (!user) {
+        redirect('/');
+    }
+
+    return (
+        <SideBar currentPath={"/dashboard"}>
+            {children}
+        </SideBar>
+    );
+}
