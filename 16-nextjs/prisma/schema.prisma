@@ -12,7 +12,7 @@ model console{
   name String @unique
   image String @default("no-image.png")
   releaseDate DateTime
-  manufacturer String
+  manufacturer String 
   description String @db.Text
   games Games[]
 }

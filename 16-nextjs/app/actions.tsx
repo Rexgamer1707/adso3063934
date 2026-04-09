@@ -119,7 +119,7 @@ export async function createGameAction(formData: FormData) {
                 description: validated.data.description,
                 cover: fileName,
                 developer: "Pending",
-                releaseDate: new Date(),
+                releaseDate: new Date(formData.get("releaseDate") as string), 
                 genre: "Action"
             }
         });
@@ -144,13 +144,13 @@ export async function getConsolesAction() {
     }
 }
 
-export async function getGamesAction(page: number = 1, pageSize: number = 12, query: string = "") {
+export async function getGamesAction(page: number = 1, pageSize: number = 12, query: string = "", consoleId: number = 0) {
     try {
         const skip = (page - 1) * pageSize;
 
-        const where = query
-            ? { title: { contains: query, mode: 'insensitive' as const } }
-            : {};
+        const where: any = {};
+        if (query) where.title = { contains: query, mode: 'insensitive' };
+        if (consoleId > 0) where.console_id = consoleId;
 
         const [games, total] = await Promise.all([
             prisma.games.findMany({
@@ -163,14 +163,117 @@ export async function getGamesAction(page: number = 1, pageSize: number = 12, qu
             prisma.games.count({ where })
         ]);
 
-        return {
-            success: true,
-            games,
-            totalPages: Math.ceil(total / pageSize),
-            currentPage: page
-        };
+        return { success: true, games, totalPages: Math.ceil(total / pageSize), currentPage: page };
     } catch (error) {
         console.error("Error en getGamesAction:", error);
         return { success: false, error: "No se pudieron cargar los juegos" };
+    }
+}
+
+export async function getConsolesWithCountAction() {
+    try {
+        const consoles = await prisma.console.findMany({
+            orderBy: { name: 'asc' },
+            include: {
+                _count: { select: { games: true } }
+            }
+        });
+        return { success: true, consoles };
+    } catch (error) {
+        return { success: false, error: "No se pudieron cargar las consolas" };
+    }
+}
+
+export async function createConsoleAction(formData: FormData) {
+    try {
+        const data = {
+            name: formData.get("name") as string,
+            manufacturer: formData.get("manufacturer") as string,
+            description: formData.get("description") as string,
+            releaseDate: new Date(formData.get("releaseDate") as string),
+        };
+
+        await prisma.console.create({ data });
+        revalidatePath("/consoles");
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: "No se pudo crear la consola" };
+    }
+}
+
+export async function deleteConsoleAction(id: number) {
+    try {
+        await prisma.console.delete({ where: { id } });
+        revalidatePath("/consoles");
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: "No se pudo eliminar la consola" };
+    }
+}
+
+export async function getConsoleByIdAction(id: number) {
+    try {
+        const console = await prisma.console.findUnique({ where: { id } });
+        return { success: true, console };
+    } catch (error) {
+        return { success: false, error: "No se pudo obtener la consola" };
+    }
+}
+
+export async function updateConsoleAction(id: number, data: {
+    name: string;
+    manufacturer: string;
+    description: string;
+    releaseDate: string;
+}) {
+    try {
+        await prisma.console.update({
+            where: { id },
+            data: {
+                name: data.name,
+                manufacturer: data.manufacturer,
+                description: data.description,
+                releaseDate: new Date(data.releaseDate),
+            }
+        });
+        revalidatePath("/consoles");
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: "No se pudo actualizar la consola" };
+    }
+}
+
+export async function getDashboardStatsAction() {
+    try {
+        const [totalGames, totalConsoles, gamesByConsole, recentGames, priceStats] = await Promise.all([
+            prisma.games.count(),
+            prisma.console.count(),
+            prisma.console.findMany({
+                include: { _count: { select: { games: true } } },
+                orderBy: { name: 'asc' }
+            }),
+            prisma.games.findMany({
+                take: 5,
+                orderBy: { id: 'desc' },
+                include: { console: true }
+            }),
+            prisma.games.aggregate({
+                _avg: { price: true },
+                _max: { price: true },
+                _min: { price: true },
+                _sum: { price: true }
+            })
+        ]);
+
+        return {
+            success: true,
+            totalGames,
+            totalConsoles,
+            gamesByConsole,
+            recentGames,
+            priceStats
+        };
+    } catch (error) {
+        return { success: false, error: "Error al cargar estadísticas" };
     }
 }

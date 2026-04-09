@@ -1,24 +1,22 @@
-import { getGamesAction } from "@/app/actions";
+import { getGamesAction, getConsolesAction } from "@/app/actions";
 import GameCard from "./GameCard";
 import Pagination from "./Pagination";
 import SearchGames from "./SearchGames";
 import AddGameButton from "./AddGameButton";
 
-
 interface GamesInfoProps {
     currentPage: number;
     searchQuery: string;
+    consoleId: number;
 }
 
-export default async function GamesInfo({ currentPage, searchQuery }: GamesInfoProps) {
+export default async function GamesInfo({ currentPage, searchQuery, consoleId }: GamesInfoProps) {
     const pageSize = 12;
 
-    // Llamamos a la acción pasando la página y el término de búsqueda
-    const { games, totalPages, success } = await getGamesAction(
-        currentPage,
-        pageSize,
-        searchQuery
-    );
+    const [{ games, totalPages, success }, { consoles }] = await Promise.all([
+        getGamesAction(currentPage, pageSize, searchQuery, consoleId),
+        getConsolesAction()
+    ]);
 
     if (!success) {
         return (
@@ -31,7 +29,6 @@ export default async function GamesInfo({ currentPage, searchQuery }: GamesInfoP
 
     return (
         <div className="flex-1 p-4 md:p-8">
-            {/* Header con Título y Buscador */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10">
                 <div>
                     <h1 className="text-3xl font-bold text-white tracking-tight">My Collection</h1>
@@ -46,14 +43,12 @@ export default async function GamesInfo({ currentPage, searchQuery }: GamesInfoP
                     </div>
                 </div>
 
-                {/* Componente del Buscador Dinámico + botón Add */}
                 <div className="flex items-center gap-4 ms-auto">
-                    <SearchGames />
+                    <SearchGames consoles={consoles ?? []} />
                     <AddGameButton />
                 </div>
             </div>
 
-            {/* Grid Responsivo de Juegos */}
             {games && games.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {games.map((game: any) => (
@@ -61,7 +56,6 @@ export default async function GamesInfo({ currentPage, searchQuery }: GamesInfoP
                     ))}
                 </div>
             ) : (
-                /* Estado vacío si no hay resultados */
                 <div className="flex flex-col items-center justify-center py-24 bg-white/5 rounded-[2rem] border border-dashed border-white/10">
                     <div className="bg-white/5 p-4 rounded-full mb-4">
                         <svg className="w-10 h-10 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -73,14 +67,9 @@ export default async function GamesInfo({ currentPage, searchQuery }: GamesInfoP
                 </div>
             )}
 
-            {/* Paginación: Solo aparece si hay más de una página */}
             {totalPages && totalPages > 1 && (
                 <div className="mt-12">
-                    <Pagination
-                        totalPages={totalPages}
-                        currentPage={currentPage}
-                        searchQuery={searchQuery} // Importante pasar el query a la paginación
-                    />
+                    <Pagination totalPages={totalPages} currentPage={currentPage} searchQuery={searchQuery} />
                 </div>
             )}
         </div>

@@ -16,17 +16,14 @@ export default async function GamesPage({ searchParams }: PageProps) {
         redirect('/');
     }
 
-    // 1. Desembocamos searchParams (Obligatorio en Next.js 15)
     const params = await searchParams;
-
-    // 2. Extraemos el número de página (por defecto 1)
     const currentPage = parseInt(params.page || "1");
-
     const searchQuery = params.search || "";
+    const consoleId = parseInt(params.console || "0");
 
     return (
-        <SideBar currentPath={"/games"}>
-            <GamesInfo currentPage={currentPage} searchQuery={searchQuery} />
+        <SideBar currentPath="/games">
+            <GamesInfo currentPage={currentPage} searchQuery={searchQuery} consoleId={consoleId} />
         </SideBar>
     );
 }

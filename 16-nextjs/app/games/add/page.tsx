@@ -12,6 +12,7 @@ const gameSchema = z.object({
     price: z.number().positive("Price must be greater than 0"),
     console_id: z.number().min(1, "Select a platform"),
     description: z.string().min(10, "Description too short"),
+    releaseDate: z.string().min(1, "Release date is required"), // 👈
 });
 
 async function compressImage(file: File): Promise<File> {
@@ -26,25 +27,15 @@ async function compressImage(file: File): Promise<File> {
                 let { width, height } = img;
                 const maxDim = 1200;
                 if (width > maxDim || height > maxDim) {
-                    if (width > height) {
-                        height = (height / width) * maxDim;
-                        width = maxDim;
-                    } else {
-                        width = (width / height) * maxDim;
-                        height = maxDim;
-                    }
+                    if (width > height) { height = (height / width) * maxDim; width = maxDim; }
+                    else { width = (width / height) * maxDim; height = maxDim; }
                 }
                 canvas.width = width;
                 canvas.height = height;
-                const ctx = canvas.getContext("2d")!;
-                ctx.drawImage(img, 0, 0, width, height);
+                canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
                 canvas.toBlob(
-                    (blob) => {
-                        const compressed = new File([blob!], file.name, { type: "image/jpeg" });
-                        resolve(compressed);
-                    },
-                    "image/jpeg",
-                    0.8
+                    (blob) => resolve(new File([blob!], file.name, { type: "image/jpeg" })),
+                    "image/jpeg", 0.8
                 );
             };
         };
@@ -56,13 +47,14 @@ export default function AddGamePage() {
     const [preview, setPreview] = useState<string | null>(null);
     const [consoles, setConsoles] = useState<any[]>([]);
     const [errors, setErrors] = useState<any>({});
+    const [file, setFile] = useState<File | null>(null);
     const [formData, setFormData] = useState({
         title: "",
         price: 0,
         console_id: 0,
-        description: ""
+        description: "",
+        releaseDate: "" // 👈
     });
-    const [file, setFile] = useState<File | null>(null);
 
     useEffect(() => {
         async function fetchConsoles() {
@@ -80,23 +72,20 @@ export default function AddGamePage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // 1. Validar con Zod
         const result = gameSchema.safeParse(formData);
         if (!result.success) {
             setErrors(result.error.flatten().fieldErrors);
             return;
         }
 
-        
-
-        // 3. Construir FormData
         const data = new FormData();
         data.append("title", formData.title);
         data.append("price", String(formData.price));
         data.append("console_id", String(formData.console_id));
         data.append("description", formData.description);
+        data.append("releaseDate", formData.releaseDate); // 👈
+        if (file) data.append("cover", file);
 
-        // 4. Llamar action
         const res = await createGameAction(data);
 
         if (res.success) {
@@ -139,6 +128,8 @@ export default function AddGamePage() {
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-8 space-y-6">
+
+                    {/* TITLE */}
                     <input
                         type="text"
                         placeholder="Game title"
@@ -146,8 +137,9 @@ export default function AddGamePage() {
                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                         className="input input-bordered w-full"
                     />
-                    {errors.title && <p className="text-red-500">{errors.title[0]}</p>}
+                    {errors.title && <p className="text-red-500 text-sm">{errors.title[0]}</p>}
 
+                    {/* FILE */}
                     <input
                         type="file"
                         accept="image/*"
@@ -169,8 +161,9 @@ export default function AddGamePage() {
                             <img src={preview} alt="Cover preview" className="w-full h-full object-cover" />
                         </div>
                     )}
-                    {errors.cover && <p className="text-red-500">{errors.cover[0]}</p>}
+                    {errors.cover && <p className="text-red-500 text-sm">{errors.cover[0]}</p>}
 
+                    {/* PRICE */}
                     <input
                         type="number"
                         placeholder="Price"
@@ -178,8 +171,23 @@ export default function AddGamePage() {
                         onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
                         className="input input-bordered w-full"
                     />
-                    {errors.price && <p className="text-red-500">{errors.price[0]}</p>}
+                    {errors.price && <p className="text-red-500 text-sm">{errors.price[0]}</p>}
 
+                    {/* RELEASE DATE */}
+                    <div className="form-control">
+                        <label className="label">
+                            <span className="label-text text-gray-400">Release Date</span>
+                        </label>
+                        <input
+                            type="date"
+                            value={formData.releaseDate}
+                            onChange={(e) => setFormData({ ...formData, releaseDate: e.target.value })}
+                            className="input input-bordered w-full"
+                        />
+                        {errors.releaseDate && <p className="text-red-500 text-sm mt-1">{errors.releaseDate[0]}</p>}
+                    </div>
+
+                    {/* PLATFORM */}
                     <select
                         value={formData.console_id}
                         onChange={(e) => setFormData({ ...formData, console_id: Number(e.target.value) })}
@@ -189,15 +197,16 @@ export default function AddGamePage() {
                             <option key={c.id} value={c.id}>{c.name}</option>
                         ))}
                     </select>
-                    {errors.console_id && <p className="text-red-500">{errors.console_id[0]}</p>}
+                    {errors.console_id && <p className="text-red-500 text-sm">{errors.console_id[0]}</p>}
 
+                    {/* DESCRIPTION */}
                     <textarea
                         placeholder="Description"
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                         className="textarea textarea-bordered w-full"
                     />
-                    {errors.description && <p className="text-red-500">{errors.description[0]}</p>}
+                    {errors.description && <p className="text-red-500 text-sm">{errors.description[0]}</p>}
 
                     <button className="btn btn-primary w-full">
                         Create Game
