@@ -1,11 +1,11 @@
 "use server";
 
-import { z } from "zod";
 import { PrismaClient } from '@/src/generated/prisma';
 import { PrismaNeon } from '@prisma/adapter-neon';
 import { revalidatePath } from 'next/cache';
-import { writeFile } from "fs/promises";
-import path from 'path';
+
+import { put } from "@vercel/blob";
+import { gameSchema, consoleSchema } from "@/component/lib/schemas";
 
 const prisma = new PrismaClient({
     adapter: new PrismaNeon({
@@ -13,20 +13,13 @@ const prisma = new PrismaClient({
     })
 })
 
-const gameSchema = z.object({
-    title: z.string().min(3, "Title required"),
-    price: z.coerce.number().positive("Invalid price"),
-    console_id: z.coerce.number(),
-    description: z.string().min(10, "Description too short"),
-});
 
 export async function deleteGameAction(id: number) {
     try {
-        await prisma.Games.delete({
+        await prisma.games.delete({ // Corregido a minúsculas
             where: { id: id }
         });
 
-        // Esto limpia la caché de la página de juegos para que el juego desaparezca
         revalidatePath('/games');
         return { success: true };
     } catch (error) {
@@ -35,42 +28,44 @@ export async function deleteGameAction(id: number) {
     }
 }
 
-export async function updateGameAction(
-    id: number,
-    data: { title: string; price: number; cover: string },
-    formData?: FormData
-) {
+// CORRECCIÓN: Agregado console_id a la interfaz de data
+export async function updateGameAction(id: number, formData: FormData) {
     try {
-        let coverFileName = data.cover;
+        const rawData = {
+            title: formData.get("title"),
+            price: formData.get("price"),
+            console_id: formData.get("console_id"),
+            description: formData.get("description"),
+        };
 
-        // Si viene una nueva imagen, guardarla
-        const newCover = formData?.get("newCover") as File | null;
+        const validated = gameSchema.parse(rawData);
+        const newCover = formData.get("newCover") as File | null;
+
+        const existingGame = await prisma.games.findUnique({ where: { id } });
+        let coverFileName = existingGame?.cover || "/no-cover.jpeg";
+
         if (newCover && newCover.size > 0) {
-            const bytes = await newCover.arrayBuffer();
-            const buffer = Buffer.from(bytes);
-            const fileName = `${Date.now()}-${newCover.name}`;
-            const filePath = path.join(process.cwd(), "public/uploads", fileName);
-            await writeFile(filePath, buffer);
-            coverFileName = fileName;
+            const blob = await put(newCover.name, newCover, {
+                access: 'public',
+                allowOverwrite: true // ✅ Esto reemplaza el archivo viejo
+            });
         }
 
         await prisma.games.update({
             where: { id },
             data: {
-                title: data.title,
-                price: data.price,
+                ...validated,
                 cover: coverFileName,
-                console_id: data.console_id,
+                console_id: Number(validated.console_id),
             }
         });
 
         revalidatePath('/games');
         revalidatePath(`/games/${id}`);
         return { success: true };
-
     } catch (error) {
         console.error(error);
-        return { success: false, error: "Error al actualizar el juego" };
+        return { success: false, error: "Error al actualizar" };
     }
 }
 
@@ -96,19 +91,19 @@ export async function createGameAction(formData: FormData) {
         };
 
         const validated = gameSchema.safeParse(data);
-        if (!validated.success) {
-            return { success: false, errors: validated.error.flatten().fieldErrors };
-        }
+        if (!validated.success) return { success: false, errors: validated.error.flatten().fieldErrors };
 
         const file = formData.get("cover") as File;
-        let fileName = "no-cover.jpeg"; // 👈 default
+        let finalImageUrl = "";
 
         if (file && file.size > 0) {
-            const bytes = await file.arrayBuffer();
-            const buffer = Buffer.from(bytes);
-            fileName = `${Date.now()}-${file.name}`;
-            const filePath = path.join(process.cwd(), "public/uploads", fileName);
-            await writeFile(filePath, buffer);
+            // ✅ SUBIDA A VERCEL BLOB
+            const blob = await put(file.name, file, {
+                access: 'public',
+            });
+            finalImageUrl = blob.url; // Guardamos la URL pública (https://...)
+        } else {
+            finalImageUrl = "/no-cover.jpeg"; // Imagen por defecto en tu carpeta public
         }
 
         await prisma.games.create({
@@ -117,19 +112,18 @@ export async function createGameAction(formData: FormData) {
                 price: validated.data.price,
                 console_id: validated.data.console_id,
                 description: validated.data.description,
-                cover: fileName,
+                cover: finalImageUrl, // Guardamos la URL del Blob
                 developer: "Pending",
-                releaseDate: new Date(formData.get("releaseDate") as string), 
+                releaseDate: formData.get("releaseDate") ? new Date(formData.get("releaseDate") as string) : new Date(),
                 genre: "Action"
             }
         });
 
         revalidatePath("/games");
         return { success: true };
-
     } catch (error) {
-        console.error("❌ FULL ERROR:", error);
-        return { success: false, error: "Server error" };
+        console.error(error);
+        return { success: false, error: "Error al crear el juego" };
     }
 }
 
@@ -186,28 +180,43 @@ export async function getConsolesWithCountAction() {
 
 export async function createConsoleAction(formData: FormData) {
     try {
-        const data = {
-            name: formData.get("name") as string,
-            manufacturer: formData.get("manufacturer") as string,
-            description: formData.get("description") as string,
-            releaseDate: new Date(formData.get("releaseDate") as string),
-        };
+        const name = formData.get("name") as string;
+        const manufacturer = formData.get("manufacturer") as string;
+        const description = formData.get("description") as string;
+        const file = formData.get("file") as File; // Recibimos el archivo
 
-        await prisma.console.create({ data });
+        let imageUrl = "/imgs/no-console.jpeg";
+
+        // Si hay archivo, lo subimos a Vercel
+        if (file && file.size > 0) {
+            const blob = await put(`consoles/${file.name}`, file, { access: 'public' });
+            imageUrl = blob.url; // Esta es la URL de internet
+        }
+
+        // GUARDAR EN PRISMA
+        await prisma.console.create({
+            data: {
+                name,
+                manufacturer,
+                description,
+                image: imageUrl, // ✅ Aquí usamos el nombre exacto de tu schema.prisma
+            }
+        });
+
         revalidatePath("/consoles");
         return { success: true };
     } catch (error) {
-        return { success: false, error: "No se pudo crear la consola" };
+        console.error("Error en Prisma:", error);
+        return { success: false };
     }
 }
-
 export async function deleteConsoleAction(id: number) {
     try {
         await prisma.console.delete({ where: { id } });
         revalidatePath("/consoles");
         return { success: true };
     } catch (error) {
-        return { success: false, error: "No se pudo eliminar la consola" };
+        return { success: false, error: "No se pudo eliminar" };
     }
 }
 
@@ -220,26 +229,44 @@ export async function getConsoleByIdAction(id: number) {
     }
 }
 
-export async function updateConsoleAction(id: number, data: {
-    name: string;
-    manufacturer: string;
-    description: string;
-    releaseDate: string;
-}) {
+export async function updateConsoleAction(id: number, formData: FormData) {
     try {
+        // 1. Extraer y validar datos
+        const rawData = {
+            name: formData.get("name"),
+            manufacturer: formData.get("manufacturer"),
+            description: formData.get("description"),
+        };
+        const validated = consoleSchema.parse(rawData);
+        const file = formData.get("image") as File;
+
+        // 2. Buscar consola actual para mantener imagen si no se sube una nueva
+        const existingConsole = await prisma.console.findUnique({ where: { id } });
+        let imageUrl = existingConsole?.image || "/imgs/no-console.jpeg";
+
+        // 3. Si hay archivo nuevo, subirlo y reemplazar URL
+        if (file && file.size > 0) {
+            const filename = `consoles/${Date.now()}-${file.name}`;
+            const blob = await put(filename, file, { access: 'public' });
+            imageUrl = blob.url;
+
+            // Opcional: Aquí podrías añadir lógica para borrar la imagen vieja de Vercel Blob usando del(existingConsole.image)
+        }
+
+        // 4. Actualizar en Base de Datos
         await prisma.console.update({
             where: { id },
             data: {
-                name: data.name,
-                manufacturer: data.manufacturer,
-                description: data.description,
-                releaseDate: new Date(data.releaseDate),
+                ...validated,
+                image: imageUrl,
             }
         });
+
         revalidatePath("/consoles");
         return { success: true };
     } catch (error) {
-        return { success: false, error: "No se pudo actualizar la consola" };
+        console.error("Error updating console:", error);
+        return { success: false, error: "Error al actualizar la consola" };
     }
 }
 

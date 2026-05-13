@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Pet;
+use Illuminate\Support\Facades\File;
 
 class PetController extends Controller
 {
@@ -13,18 +14,18 @@ class PetController extends Controller
      */
     public function index()
     {
-        $pets = pet::all();
+        $pets = Pet::all();
 
         if ($pets->isEmpty()) {
             return response()->json([
                 'error' => 'No pets found 🐾'
             ], 404);
-        } else {
-            return response()->json([
-                'message' => 'Successful Query 🐈',
-                'pets' => $pets
-            ], 200);
         }
+
+        return response()->json([
+            'message' => 'Successful Query 🐈',
+            'pets' => $pets
+        ], 200);
     }
 
     /**
@@ -41,8 +42,15 @@ class PetController extends Controller
                 'breed' => ['required', 'string'],
                 'location' => ['required', 'string'],
                 'description' => ['required', 'string'],
-                'owner_id' => ['nullable', 'integer'], // <--- Agrega esto
+                'owner_id' => ['nullable', 'integer'],
+                'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048']
             ]);
+
+            $imageName = 'no-photo.png';
+            if ($request->hasFile('image')) {
+                $imageName = time() . '.' . $request->image->extension();
+                $request->image->move(public_path('images'), $imageName);
+            }
 
             $pet = Pet::create([
                 'name' => $request->name,
@@ -53,7 +61,8 @@ class PetController extends Controller
                 'location' => $request->location,
                 'description' => $request->description,
                 'status' => 'active',
-                'owner_id' => $request->owner_id, // <--- Y esto
+                'owner_id' => $request->owner_id,
+                'image' => $imageName,
             ]);
 
             return response()->json([
@@ -65,29 +74,26 @@ class PetController extends Controller
             return response()->json([
                 'message' => 'Error in the request',
                 'errors' => $e->errors()
-            ], 400);
+            ], 422); // Error de validación estándar
         }
     }
-
-
-
 
     /**
      * Display the specified resource.
      */
-    public function show(Request $request)
+    public function show($id)
     {
-        $pet = Pet::find($request->id);
+        $pet = Pet::find($id);
         if ($pet) {
             return response()->json([
                 'message' => 'Successful Query 🐕',
                 'pet' => $pet
             ], 200);
-        } else {
-            return response()->json([
-                'error' => 'Pet not found 🐾'
-            ], 404);
         }
+
+        return response()->json([
+            'error' => 'Pet not found 🐾'
+        ], 404);
     }
 
     /**
@@ -95,15 +101,13 @@ class PetController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // 1. Buscamos la mascota por el ID de la URL
         $pet = Pet::find($id);
 
-        // 2. Si no existe, avisamos
         if (!$pet) {
             return response()->json(['error' => 'Pet not found 🐾'], 404);
         }
 
-        // 3. Validamos los datos (usamos 'sometimes' para que no sea obligatorio enviar todo)
+        // CORRECCIÓN: 'originimage' ahora es 'nullable' para evitar el error 422
         $request->validate([
             'name' => ['sometimes', 'string'],
             'kind' => ['sometimes', 'string'],
@@ -112,26 +116,33 @@ class PetController extends Controller
             'breed' => ['sometimes', 'string'],
             'location' => ['sometimes', 'string'],
             'description' => ['sometimes', 'string'],
-            'image' => ['sometimes', 'image'],
-            'originimage' => ['sometimes', 'string'],
+            'image' => ['sometimes', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'originimage' => ['nullable'],
         ]);
 
-        // handle image upload if provided
+        // Manejo de la imagen
         if ($request->hasFile('image')) {
-            $image = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images'), $image);
-            // remove old image if not default
-            if (($request->originimage ?? $pet->image) != 'no-photo.png' && file_exists(public_path('images/') . ($request->originimage ?? $pet->image))) {
-                @unlink(public_path('images/') . ($request->originimage ?? $pet->image));
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+
+            // Determinar qué imagen borrar (la que viene en originimage o la que tiene el modelo)
+            $oldImage = $request->input('originimage') ?? $pet->image;
+
+            if ($oldImage && !in_array($oldImage, ['no-photo.png', 'no-photo.svg'])) {
+                $oldPath = public_path('images/' . $oldImage);
+                if (file_exists($oldPath)) {
+                    @unlink($oldPath);
+                }
             }
-            $pet->image = $image;
+            $pet->image = $imageName;
         }
 
-        // update other fields
+        // Actualización de campos restantes
         $updatable = ['name', 'kind', 'weight', 'age', 'breed', 'location', 'description'];
         foreach ($updatable as $field) {
-            if ($request->has($field))
+            if ($request->has($field)) {
                 $pet->{$field} = $request->input($field);
+            }
         }
 
         $pet->save();
@@ -141,20 +152,30 @@ class PetController extends Controller
             'pet' => $pet
         ], 200);
     }
+
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id) // Cambia Request $request por $id
-{
-    $pet = Pet::find($id);
-    if ($pet) {
-        $pet->delete();
-        return response()->json([
-            'message' => 'Pet was successfully deleted!',
-            'pet' => $pet
-        ], 200);
-    } else {
+    public function destroy($id)
+    {
+        $pet = Pet::find($id);
+
+        if ($pet) {
+            // Opcional: Borrar la imagen física al eliminar la mascota
+            if ($pet->image && !in_array($pet->image, ['no-photo.png', 'no-photo.svg'])) {
+                $path = public_path('images/' . $pet->image);
+                if (file_exists($path)) {
+                    @unlink($path);
+                }
+            }
+
+            $pet->delete();
+            return response()->json([
+                'message' => 'Pet was successfully deleted!',
+                'pet' => $pet
+            ], 200);
+        }
+
         return response()->json(['error' => 'Pet not found 🐾'], 404);
     }
-}
 }

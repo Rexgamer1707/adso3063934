@@ -1,8 +1,14 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\PetController;
 use App\Http\Controllers\API\AuthController;
+// routes/api.php
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
 
 
@@ -28,7 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('pets/store', [PetController::class, 'store']);
 
     // Endpoint: http://127.0.0.1:8000/api/pets/edit/{id}
-    Route::put('pets/edit/{id}', [PetController::class, 'update']);
+    Route::match(['PUT', 'POST'], 'pets/edit/{id}', [PetController::class, 'update']);
 
     // Fíjate bien en el '/{id}' al final, es obligatorio para que Laravel sepa qué borrar
     Route::delete('/pets/destroy/{id}', [App\Http\Controllers\API\PetController::class, 'destroy']);
