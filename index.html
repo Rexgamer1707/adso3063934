@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portafolio – Rexgamer1707</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold-dark:   #3b2a00;
+      --gold-mid:    #7a5c00;
+      --gold-light:  #c9a227;
+      --cream:       #e8d9b0;
+      --purple:      #4a1a7a;
+      --purple-light:#6b2fa0;
+      --bg-circle:   #111;
+      --text-dark:   #1a1200;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 20% 40%, #6b3a00 0%, #3b2200 35%, #8a7200 70%, #c9a227 100%);
+      font-family: 'Crimson Pro', serif;
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 80px;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      margin-bottom: 10px;
+      animation: fadeDown 0.7s ease both;
+    }
+    header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      font-weight: 900;
+      color: var(--text-dark);
+      letter-spacing: 0.03em;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    }
+    header p {
+      font-size: 1rem;
+      color: #3a2800;
+      margin-top: 6px;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+    }
+
+    .emblem {
+      position: relative;
+      z-index: 1;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: var(--bg-circle);
+      border: 5px solid var(--cream);
+      margin: 28px auto 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeUp 0.7s 0.15s ease both;
+      box-shadow: 0 0 40px rgba(0,0,0,0.4), 0 0 0 2px rgba(232,217,176,0.2);
+    }
+    .emblem svg { width: 88px; height: 88px; opacity: 0.75; }
+
+    .folder-list {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 580px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .folder-item {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      animation: fadeUp 0.5s ease both;
+      cursor: pointer;
+    }
+
+    /* staggered delays */
+    .folder-item:nth-child(1)  { animation-delay: 0.20s }
+    .folder-item:nth-child(2)  { animation-delay: 0.28s }
+    .folder-item:nth-child(3)  { animation-delay: 0.36s }
+    .folder-item:nth-child(4)  { animation-delay: 0.44s }
+    .folder-item:nth-child(5)  { animation-delay: 0.52s }
+    .folder-item:nth-child(6)  { animation-delay: 0.60s }
+    .folder-item:nth-child(7)  { animation-delay: 0.68s }
+    .folder-item:nth-child(8)  { animation-delay: 0.76s }
+    .folder-item:nth-child(9)  { animation-delay: 0.84s }
+    .folder-item:nth-child(10) { animation-delay: 0.92s }
+    .folder-item:nth-child(11) { animation-delay: 1.00s }
+    .folder-item:nth-child(12) { animation-delay: 1.08s }
+
+    .num-badge {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: var(--purple);
+      color: #fff;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .label-pill {
+      flex: 1;
+      background: var(--cream);
+      padding: 15px 24px 15px 32px;
+      border-radius: 0 50px 50px 0;
+      margin-left: -20px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      letter-spacing: 0.02em;
+      transition: background 0.2s, padding-left 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .label-pill .arrow {
+      font-size: 1rem;
+      opacity: 0.5;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .folder-item:hover .num-badge {
+      background: var(--purple-light);
+      transform: scale(1.08);
+    }
+    .folder-item:hover .label-pill {
+      background: #f0e4c0;
+      padding-left: 40px;
+    }
+    .folder-item:hover .label-pill .arrow {
+      opacity: 1;
+      transform: translateX(4px);
+    }
+
+    /* Preview iframe overlay */
+    .preview-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.85);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.2s ease;
+    }
+    .preview-overlay.active { display: flex; }
+
+    .preview-header {
+      width: 94%;
+      max-width: 1100px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding: 0 4px;
+    }
+    .preview-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--cream);
+      letter-spacing: 0.04em;
+    }
+    .preview-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .btn-open, .btn-close {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 7px 18px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-open {
+      background: var(--gold-light);
+      color: #1a1200;
+    }
+    .btn-close {
+      background: rgba(232,217,176,0.15);
+      color: var(--cream);
+      border: 1px solid rgba(232,217,176,0.3);
+    }
+    .btn-open:hover, .btn-close:hover { opacity: 0.8; }
+
+    .preview-frame-wrap {
+      width: 94%;
+      max-width: 1100px;
+      height: 72vh;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid rgba(232,217,176,0.25);
+      background: #fff;
+      position: relative;
+    }
+    .preview-frame-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .preview-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #111;
+      color: var(--cream);
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      gap: 14px;
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(232,217,176,0.2);
+      border-top-color: var(--gold-light);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Portafolio – Rexgamer1707</h1>
+    <p>Galería interactiva de proyectos · adso3063934</p>
+  </header>
+
+  <div class="emblem">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,8 61,35 90,35 67,55 76,82 50,65 24,82 33,55 10,35 39,35" fill="none" stroke="#c9a227" stroke-width="2.5"/>
+      <circle cx="50" cy="50" r="18" fill="none" stroke="#c9a227" stroke-width="1.8"/>
+      <line x1="50" y1="8" x2="50" y2="92" stroke="#c9a227" stroke-width="0.8" opacity="0.4"/>
+      <line x1="8" y1="50" x2="92" y2="50" stroke="#c9a227" stroke-width="0.8" opacity="0.4"/>
+    </svg>
+  </div>
+
+  <nav class="folder-list">
+    <a class="folder-item" href="#" data-url="https://adso3063934-pi.vercel.app/14-API%20JS/" data-name="14 – API JS">
+      <span class="num-badge">14</span>
+      <span class="label-pill">14 – API JS <span class="arrow">→</span></span>
+    </a>
+    <a class="folder-item" href="#" data-url="https://adso3063934-pi.vercel.app/15-reactjs/15-reactjs/" data-name="15 – React JS">
+      <span class="num-badge">15</span>
+      <span class="label-pill">15 – React JS <span class="arrow">→</span></span>
+    </a>
+    <a class="folder-item" href="#" data-url="https://adso3063934-pi.vercel.app/16-nextjs/" data-name="16 – Next JS">
+      <span class="num-badge">16</span>
+      <span class="label-pill">16 – Next JS <span class="arrow">→</span></span>
+    </a>
+    <a class="folder-item" href="#" data-url="https://adso3063934-pi.vercel.app/17-nodejs/" data-name="17 – Node JS">
+      <span class="num-badge">17</span>
+      <span class="label-pill">17 – Node JS <span class="arrow">→</span></span>
+    </a>
+    <a class="folder-item" href="#" data-url="https://adso3063934-pi.vercel.app/18-react-native/" data-name="18 – React Native">
+      <span class="num-badge">18</span>
+      <span class="label-pill">18 – React Native <span class="arrow">→</span></span>
+    </a>
+    <a class="folder-item" href="#" data-url="https://adso3063934-pi.vercel.app/20-laravel/" data-name="20 – Laravel">
+      <span class="num-badge">20</span>
+      <span class="label-pill">20 – Laravel <span class="arrow">→</span></span>
+    </a>
+    <a class="folder-item" href="#" data-url="https://adso3063934-pi.vercel.app/21-larapi/" data-name="21 – Larapi">
+      <span class="num-badge">21</span>
+      <span class="label-pill">21 – Larapi <span class="arrow">→</span></span>
+    </a>
+    <a class="folder-item" href="#" data-url="https://adso3063934-pi.vercel.app/Aip/" data-name="Aip">
+      <span class="num-badge">Ai</span>
+      <span class="label-pill">Aip <span class="arrow">→</span></span>
+    </a>
+    <a class="folder-item" href="#" data-url="https://adso3063934-pi.vercel.app/css/" data-name="CSS">
+      <span class="num-badge">CS</span>
+      <span class="label-pill">CSS <span class="arrow">→</span></span>
+    </a>
+    <a class="folder-item" href="#" data-url="https://adso3063934-pi.vercel.app/imagenes/" data-name="Imágenes">
+      <span class="num-badge">Im</span>
+      <span class="label-pill">Imágenes <span class="arrow">→</span></span>
+    </a>
+    <a class="folder-item" href="#" data-url="https://adso3063934-pi.vercel.app/pokedex/" data-name="Pokédex">
+      <span class="num-badge">Pk</span>
+      <span class="label-pill">Pokédex <span class="arrow">→</span></span>
+    </a>
+    <a class="folder-item" href="#" data-url="https://adso3063934-pi.vercel.app/react-frontend/" data-name="React Frontend">
+      <span class="num-badge">Rf</span>
+      <span class="label-pill">React Frontend <span class="arrow">→</span></span>
+    </a>
+  </nav>
+
+  <!-- Preview overlay -->
+  <div class="preview-overlay" id="previewOverlay">
+    <div class="preview-header">
+      <span class="preview-title" id="previewTitle">Cargando…</span>
+      <div class="preview-actions">
+        <a class="btn-open" id="btnOpenNew" href="#" target="_blank" rel="noopener">↗ Abrir en nueva pestaña</a>
+        <button class="btn-close" id="btnClose">✕ Cerrar</button>
+      </div>
+    </div>
+    <div class="preview-frame-wrap">
+      <div class="preview-loading" id="previewLoading">
+        <div class="spinner"></div>
+        <span>Cargando proyecto…</span>
+      </div>
+      <iframe id="previewFrame" src="" title="Vista previa"></iframe>
+    </div>
+  </div>
+
+  <script>
+    const overlay   = document.getElementById('previewOverlay');
+    const frame     = document.getElementById('previewFrame');
+    const loading   = document.getElementById('previewLoading');
+    const title     = document.getElementById('previewTitle');
+    const btnOpen   = document.getElementById('btnOpenNew');
+    const btnClose  = document.getElementById('btnClose');
+
+    document.querySelectorAll('.folder-item').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const url  = link.dataset.url;
+        const name = link.dataset.name;
+
+        title.textContent  = name;
+        btnOpen.href       = url;
+        frame.src          = '';
+        loading.style.display = 'flex';
+        overlay.classList.add('active');
+
+        // small delay so loading spinner shows before iframe starts
+        setTimeout(() => {
+          frame.src = url;
+          frame.onload = () => { loading.style.display = 'none'; };
+        }, 300);
+      });
+    });
+
+    btnClose.addEventListener('click', () => {
+      overlay.classList.remove('active');
+      frame.src = '';
+    });
+
+    // close on backdrop click
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) {
+        overlay.classList.remove('active');
+        frame.src = '';
+      }
+    });
+
+    // close with Escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        overlay.classList.remove('active');
+        frame.src = '';
+      }
+    });
+  </script>
+</body>
+</html>
