@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Clover - Register</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <main class="mobile-stage">
+        <section class="register-view app-view is-active" aria-label="Vista register">
+            <button class="menu-trigger register-menu-trigger" type="button" aria-label="Abrir menu" aria-expanded="false">
+                <img class="clover-logo" src="img/clover-logo.svg" alt="">
+            </button>
+
+            <form class="register-panel">
+                <div class="register-icon">
+                    <img src="img/clover-menu.svg" alt="">
+                </div>
+
+                <h2>REGISTER</h2>
+
+                <label for="name">Name</label>
+                <input id="name" type="text" placeholder="Name">
+
+                <label for="lastname">LastName</label>
+                <input id="lastname" type="text" placeholder="LastName">
+
+                <label for="username">Username</label>
+                <input id="username" type="text" placeholder="Username">
+
+                <label for="register-email">Email</label>
+                <input id="register-email" type="email" placeholder="Email">
+
+                <label for="register-password">Password</label>
+                <input id="register-password" type="password" placeholder="Password">
+
+                <label for="confirm-password">Confirm Password</label>
+                <input id="confirm-password" type="password" placeholder="Password">
+
+                <button class="submit-register" type="submit">REGISTER</button>
+            </form>
+
+            <div class="login-callout">
+                <p>DON'T YOU HAVE AN<br>ACCOUNT?</p>
+                <a href="login.html">LOGIN</a>
+            </div>
+        </section>
+
+        <button class="menu-backdrop" type="button" aria-label="Cerrar menu"></button>
+
+        <aside class="side-menu" aria-hidden="true">
+            <nav class="side-menu-nav" aria-label="Menu principal">
+                <a href="index.html">
+                    <span>HOME</span>
+                    <img src="img/castle.svg" alt="">
+                </a>
+                <a href="login.html">
+                    <span>LOGIN</span>
+                    <img src="img/clover-menu.svg" alt="">
+                </a>
+                <a href="register.html">
+                    <span>REGISTER</span>
+                    <img src="img/book-open.svg" alt="">
+                </a>
+            </nav>
+        </aside>
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Clover - Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <main class="mobile-stage">
+        <section class="dashboard-view app-view is-active" aria-label="Dashboard">
+            <button class="menu-trigger dashboard-menu-trigger" type="button" aria-label="Abrir menu" aria-expanded="false">
+                <img class="clover-logo" src="img/clover-logo.svg" alt="">
+            </button>
+
+            <img class="dashboard-clover" src="img/dashboard-clover.svg" alt="">
+
+            <h1 class="dashboard-title">DASHBOARD</h1>
+
+            <div class="dashboard-tabs" role="tablist" aria-label="Dashboard tabs">
+                <button class="active" type="button" data-dashboard-tab="houses">HOUSES</button>
+                <button type="button" data-dashboard-tab="characters">CHARACTERS</button>
+            </div>
+
+            <section class="dashboard-content">
+                <article class="houses-panel">
+                    <h2 id="dashboardListTitle">HOUSES</h2>
+                    <div id="dashboardList" class="dashboard-list"></div>
+                </article>
+
+                <article class="info-panel">
+                    <h2>INFORMATION</h2>
+                    <div class="info-card">
+                        <img id="dashboardInfoImage" src="img/castle.svg" alt="">
+                    </div>
+                    <p id="dashboardInfoText">Cargando informacion...</p>
+                </article>
+            </section>
+        </section>
+
+        <button class="menu-backdrop" type="button" aria-label="Cerrar menu"></button>
+
+        <aside class="side-menu side-menu--dashboard" aria-hidden="true">
+            <nav class="side-menu-nav side-menu-nav--dashboard" aria-label="Menu principal">
+                <a href="dashboard.html" class="side-menu-item active">
+                    <span>DASHBOARD</span>
+                    <img src="img/clover-logo.svg" alt="">
+                </a>
+                <a href="profile.html" class="side-menu-item">
+                    <span>MY PROFILE</span>
+                    <img src="img/profile.svg" alt="">
+                </a>
+                <a href="characters.html" class="side-menu-item">
+                    <span>CHARACTERS</span>
+                    <img src="img/raincoat.svg" alt="">
+                </a>
+                <a href="houses.html" class="side-menu-item">
+                    <span>HOUSES</span>
+                    <img src="img/house-turret.svg" alt="">
+                </a>
+            </nav>
+            <button class="side-menu-logout" type="button">
+                LOGOUT
+                <img src="img/sign-out.svg" alt="">
+            </button>
+        </aside>
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>

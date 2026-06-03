@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Clover - Agregar Personaje</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <main class="mobile-stage">
+        <section class="view-char-view app-view is-active">
+
+            <button class="menu-trigger char-menu-trigger" type="button" aria-label="Abrir menu" aria-expanded="false">
+                <img class="clover-logo" src="../img/clover-logo.svg" alt="">
+            </button>
+
+            <div class="char-avatar-wrap">
+                <div class="char-avatar char-avatar-edit" onclick="document.getElementById('addAvatarInput').click()">
+                    <img id="addAvatar" src="../img/raincoat.svg" alt="Character">
+                </div>
+                <div class="char-avatar-pencil" onclick="document.getElementById('addAvatarInput').click()">
+                    <img src="../img/pencil.svg" alt="editar">
+                </div>
+                <input type="file" id="addAvatarInput" accept="image/*" style="display:none">
+            </div>
+
+            <h1 class="char-title">ADD CHARACTER</h1>
+
+            <form class="ec-form" id="addForm">
+                <div class="ec-field">
+                    <label class="ec-label">NAME</label>
+                    <input class="ec-input" id="addInputName" type="text" placeholder="Nombre del personaje">
+                </div>
+                <div class="ec-field">
+                    <label class="ec-label">MAGIC TYPE</label>
+                    <input class="ec-input" id="addInputMagic" type="text" placeholder="Tipo de magia">
+                </div>
+                <div class="ec-field">
+                    <label class="ec-label">RANK</label>
+                    <input class="ec-input" id="addInputRank" type="text" placeholder="Rango">
+                </div>
+
+                <div class="ec-actions">
+                    <button class="vc-back-btn" type="button" onclick="history.back()">&#8592; BACK</button>
+                    <button class="ec-save-btn" type="submit">ADD ✓</button>
+                </div>
+            </form>
+
+        </section>
+
+        <button class="menu-backdrop" type="button" aria-label="Cerrar menu"></button>
+
+        <aside class="side-menu side-menu--dashboard" aria-hidden="true">
+            <nav class="side-menu-nav side-menu-nav--dashboard" aria-label="Menu principal">
+                <a href="../dashboard.html" class="side-menu-item">
+                    <span>DASHBOARD</span>
+                    <img src="../img/clover-logo.svg" alt="">
+                </a>
+                <a href="../profile.html" class="side-menu-item">
+                    <span>MY PROFILE</span>
+                    <img src="../img/profile.svg" alt="">
+                </a>
+                <a href="../characters.html" class="side-menu-item active">
+                    <span>CHARACTERS</span>
+                    <img src="../img/raincoat.svg" alt="">
+                </a>
+                <a href="../houses.html" class="side-menu-item">
+                    <span>HOUSES</span>
+                    <img src="../img/house-turret.svg" alt="">
+                </a>
+            </nav>
+            <button class="side-menu-logout" type="button">
+                LOGOUT
+                <img src="../img/sign-out.svg" alt="">
+            </button>
+        </aside>
+    </main>
+
+    <script src="../js/app.js"></script>
+    <script>
+        document.getElementById("addAvatarInput").addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const avatarImg = document.getElementById("addAvatar");
+                avatarImg.src = ev.target.result;
+                avatarImg.style.objectFit = "cover";
+                avatarImg.style.padding = "0";
+                avatarImg.style.filter = "none";
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById("addForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById("addInputName").value.trim();
+            const magic = document.getElementById("addInputMagic").value.trim();
+            const rank = document.getElementById("addInputRank").value.trim();
+
+            if (!name || !magic || !rank) {
+                Swal.fire({
+                    title: "Campos incompletos",
+                    text: "Por favor completa todos los campos.",
+                    icon: "warning",
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#3A6FF7",
+                    background: "#1F1F29",
+                    color: "#F5F1E8"
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: "¡Personaje agregado!",
+                text: `${name.toUpperCase()} fue agregado correctamente.`,
+                icon: "success",
+                confirmButtonColor: "#3A6FF7",
+                background: "#1F1F29",
+                color: "#F5F1E8",
+                timer: 2000,
+                timerProgressBar: true,
+                showConfirmButton: false
+            }).then(() => {
+                history.back();
+            });
+        });
+    </script>
+</body>
+
+</html>

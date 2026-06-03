@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Clover - Login</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <main class="mobile-stage">
+        <section class="login-view app-view is-active" aria-label="Vista login">
+            <button class="menu-trigger login-menu-trigger" type="button" aria-label="Abrir menu" aria-expanded="false">
+                <img class="clover-logo" src="img/clover-logo.svg" alt="">
+            </button>
+
+            <form class="login-panel">
+                <div class="login-icon">
+                    <img src="img/clover-menu.svg" alt="">
+                </div>
+
+                <h2>LOGIN</h2>
+
+                <label for="email">Email</label>
+                <input id="email" type="email" placeholder="Email">
+
+                <label for="password">Password</label>
+                <input id="password" type="password" placeholder="Password">
+
+                <button class="submit-login" type="submit">LOGIN</button>
+            </form>
+
+            <div class="register-callout">
+                <p>DON'T YOU HAVE AN<br>ACCOUNT?</p>
+                <a href="register.html">REGISTER</a>
+            </div>
+        </section>
+
+        <button class="menu-backdrop" type="button" aria-label="Cerrar menu"></button>
+
+        <aside class="side-menu" aria-hidden="true">
+            <nav class="side-menu-nav" aria-label="Menu principal">
+                <a href="index.html">
+                    <span>HOME</span>
+                    <img src="img/castle.svg" alt="">
+                </a>
+                <a href="login.html">
+                    <span>LOGIN</span>
+                    <img src="img/clover-menu.svg" alt="">
+                </a>
+                <a href="register.html">
+                    <span>REGISTER</span>
+                    <img src="img/book-open.svg" alt="">
+                </a>
+            </nav>
+        </aside>
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>

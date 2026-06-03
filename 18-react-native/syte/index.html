@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Clover - Principal</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <main class="mobile-stage">
+
+        <section class="welcome-screen" aria-label="Vista principal de Black Clover">
+            <header class="topbar">
+                <button class="menu-trigger" type="button" aria-label="Abrir menu" aria-expanded="false">
+                    <img class="clover-logo" src="img/clover-logo.svg" alt="">
+                </button>
+
+                <nav class="auth-nav" aria-label="Acceso de usuario">
+                    <a href="register.html">REGISTER</a>
+                    <a href="login.html">LOGIN</a>
+                </nav>
+            </header>
+
+            <article class="random-card">
+                <img src="../imgs/Asta.webp" alt="Imagen principal de Black Clover">
+            </article>
+
+            <section class="fact-slider" aria-label="Dato de Black Clover">
+                <button class="slider-arrow arrow-left" type="button" aria-label="Imagen anterior"></button>
+
+                <div class="fact-content">
+                    <img id="factImage" src="../imgs/newblackclover.webp" alt="Detalle relacionado con Black Clover">
+                    <div class="fact-text">
+                        <p id="factTitle">Cargando dato...</p>
+                        <p id="factBody">Black Clover</p>
+                        <p id="factFooter">desde la web</p>
+                    </div>
+                </div>
+
+                <button class="slider-arrow arrow-right" type="button" aria-label="Imagen siguiente"></button>
+            </section>
+
+            <div class="slider-dots" aria-label="Indicador de imagen actual">
+                <button class="dot active" type="button" aria-label="Dato 1"></button>
+                <button class="dot" type="button" aria-label="Dato 2"></button>
+                <button class="dot" type="button" aria-label="Dato 3"></button>
+            </div>
+
+        </section>
+
+        <button class="menu-backdrop" type="button" aria-label="Cerrar menu"></button>
+
+        <aside class="side-menu" aria-hidden="true">
+            <nav class="side-menu-nav" aria-label="Menu principal">
+                <a href="index.html">
+                    <span>HOME</span>
+                    <img src="img/castle.svg" alt="">
+                </a>
+                <a href="login.html">
+                    <span>LOGIN</span>
+                    <img src="img/clover-menu.svg" alt="">
+                </a>
+                <a href="register.html">
+                    <span>REGISTER</span>
+                    <img src="img/book-open.svg" alt="">
+                </a>
+            </nav>
+        </aside>
+    </main>
+
+    <script src="js/app.js"></script>
+</body>
+
+</html>

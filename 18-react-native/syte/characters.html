@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Clover - Characters</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <main class="mobile-stage">
+        <section class="char-view app-view is-active">
+
+            <button class="menu-trigger char-menu-trigger" type="button" aria-label="Abrir menu" aria-expanded="false">
+                <img class="clover-logo" src="img/clover-logo.svg" alt="">
+            </button>
+
+            <div class="char-avatar-wrap">
+                <div class="char-avatar">
+                    <img src="img/raincoat.svg" alt="Characters">
+                </div>
+            </div>
+
+            <h1 class="char-title">CHARACTERS</h1>
+
+            <div class="char-toolbar">
+                <button class="char-add-btn" id="charAddBtn" type="button">+ ADD</button>
+            </div>
+
+            <div class="char-table-wrap">
+                <table class="char-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>NAME</th>
+                            <th>MAGIC TYPE</th>
+                            <th>RANK</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="charTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="char-pagination">
+                <button class="char-page-btn" id="charPrev" type="button">&#8592;</button>
+                <span class="char-page-info" id="charPageInfo">1 OF 3</span>
+                <button class="char-page-btn" id="charNext" type="button">&#8594;</button>
+            </div>
+
+        </section>
+
+        <button class="menu-backdrop" type="button" aria-label="Cerrar menu"></button>
+
+        <aside class="side-menu side-menu--dashboard" aria-hidden="true">
+            <nav class="side-menu-nav side-menu-nav--dashboard" aria-label="Menu principal">
+                <a href="dashboard.html" class="side-menu-item">
+                    <span>DASHBOARD</span>
+                    <img src="img/clover-logo.svg" alt="">
+                </a>
+                <a href="profile.html" class="side-menu-item">
+                    <span>MY PROFILE</span>
+                    <img src="img/profile.svg" alt="">
+                </a>
+                <a href="characters.html" class="side-menu-item active">
+                    <span>CHARACTERS</span>
+                    <img src="img/raincoat.svg" alt="">
+                </a>
+                <a href="houses.html" class="side-menu-item">
+                    <span>HOUSES</span>
+                    <img src="img/house-turret.svg" alt="">
+                </a>
+            </nav>
+            <button class="side-menu-logout" type="button">
+                LOGOUT
+                <img src="img/sign-out.svg" alt="">
+            </button>
+        </aside>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const CHARACTERS_DATA = [
+            { id: 1, name: "ASTA", magic: "ANTI MAGIC", rank: "MAGIC KNIGHT" },
+            { id: 2, name: "YUNO", magic: "WIND / STAR", rank: "MAGIC KNIGHT" },
+            { id: 3, name: "NOELLE SILVA", magic: "WATER", rank: "MAGIC KNIGHT" },
+            { id: 4, name: "YAMI SUKEHIRO", magic: "DARK", rank: "CAPTAIN" },
+            { id: 5, name: "NACHT FAUST", magic: "SHADOW", rank: "VICE-CAPTAIN" },
+            { id: 6, name: "NERO", magic: "SEALING", rank: "MAGIC KNIGHT" },
+            { id: 7, name: "VANESSA ENOTECA", magic: "RED THREAD", rank: "MAGIC KNIGHT" },
+            { id: 8, name: "LUCK VOLTIA", magic: "LIGHTNING", rank: "MAGIC KNIGHT" },
+            { id: 9, name: "MAGNA SWING", magic: "FIRE", rank: "MAGIC KNIGHT" },
+            { id: 10, name: "CHARMY PAPPITSON", magic: "COTTON / FOOD", rank: "MAGIC KNIGHT" },
+            { id: 11, name: "FINRAL ROULACASE", magic: "SPATIAL", rank: "MAGIC KNIGHT" },
+            { id: 12, name: "GAUCHE ADLAI", magic: "MIRROR", rank: "MAGIC KNIGHT" },
+            { id: 13, name: "GREY", magic: "TRANSMUTATION", rank: "MAGIC KNIGHT" },
+            { id: 14, name: "GORDON AGRIPPA", magic: "POISON CURSE", rank: "MAGIC KNIGHT" },
+            { id: 15, name: "MIMOSA VERMILLION", magic: "PLANT", rank: "MAGIC KNIGHT" },
+            { id: 16, name: "LEOPOLD VERMILLION", magic: "FIRE", rank: "MAGIC KNIGHT" },
+            { id: 17, name: "FUEGOLEON VERMILLION", magic: "FIRE", rank: "CAPTAIN" },
+            { id: 18, name: "MEREOLEONA VERMILLION", magic: "FIRE", rank: "CAPTAIN" },
+            { id: 19, name: "CHARLOTTE ROSELEI", magic: "BRIAR", rank: "CAPTAIN" },
+            { id: 20, name: "NOZEL SILVA", magic: "MERCURY", rank: "CAPTAIN" },
+            { id: 21, name: "JULIUS NOVACHRONO", magic: "TIME", rank: "WIZARD KING" },
+            { id: 22, name: "ZORA IDEALE", magic: "ASH / TRAP", rank: "MAGIC KNIGHT" },
+            { id: 23, name: "HENRY LEGOLANT", magic: "RECOMBINATION", rank: "MAGIC KNIGHT" },
+            { id: 24, name: "LIEBE", magic: "ANTI MAGIC", rank: "DEVIL" },
+            { id: 25, name: "DANTE ZOGRATIS", magic: "BODY / GRAVITY", rank: "DARK TRIAD" },
+            { id: 26, name: "VANICA ZOGRATIS", magic: "BLOOD", rank: "DARK TRIAD" },
+            { id: 27, name: "ZENON ZOGRATIS", magic: "BONE / SPATIAL", rank: "DARK TRIAD" },
+            { id: 28, name: "LOLOPECHKA", magic: "WATER", rank: "PRINCESS" },
+            { id: 29, name: "RILL BOISMORTIER", magic: "PAINTING", rank: "CAPTAIN" },
+            { id: 30, name: "DOROTHY UNSWORTH", magic: "DREAM", rank: "CAPTAIN" },
+            { id: 31, name: "JACK THE RIPPER", magic: "SLASH", rank: "CAPTAIN" },
+            { id: 32, name: "LANGRIS VAUDE", magic: "SPATIAL", rank: "VICE-CAPTAIN" },
+            { id: 33, name: "WILLIAM VANGEANCE", magic: "WORLD TREE", rank: "CAPTAIN" },
+            { id: 34, name: "PATRI", magic: "LIGHT", rank: "LEADER" },
+            { id: 35, name: "LADROS", magic: "MANA ABSORB", rank: "DIAMOND MAGE" },
+            { id: 36, name: "MARS", magic: "CRYSTAL / FIRE", rank: "DIAMOND MAGE" },
+            { id: 37, name: "FANA", magic: "FIRE / HEALING", rank: "APOSTLE" },
+            { id: 38, name: "VETTO", magic: "BEAST", rank: "APOSTLE" },
+            { id: 39, name: "LICHT", magic: "SWORD / LIGHT", rank: "LEADER" },
+            { id: 40, name: "HENRY SWALLOWTAIL", magic: "RECOMBINATION", rank: "MAGIC KNIGHT" },
+        ];
+
+        const PAGE_SIZE = 14;
+        let currentPage = 1;
+
+        function getTotalPages() {
+            return Math.max(1, Math.ceil(CHARACTERS_DATA.length / PAGE_SIZE));
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById("charTableBody");
+            const start = (currentPage - 1) * PAGE_SIZE;
+            const slice = CHARACTERS_DATA.slice(start, start + PAGE_SIZE);
+            const totalPages = getTotalPages();
+
+            tbody.innerHTML = slice.map(c => `
+        <tr>
+            <td>${c.id}</td>
+            <td>${c.name}</td>
+            <td>${c.magic}</td>
+            <td>${c.rank}</td>
+            <td class="char-actions">
+    <button class="char-action-btn" title="Ver" onclick="viewChar(${c.id})"><img src="img/eye.svg" alt="ver"></button>
+    <button class="char-action-btn" title="Editar" onclick="editChar(${c.id})"><img src="img/pencil.svg" alt="editar"></button>
+    <button class="char-action-btn char-action-btn--del" title="Eliminar" onclick="deleteChar(${c.id})"><img src="img/trash.svg" alt="eliminar"></button>
+</td>
+        </tr>
+    `).join("");
+
+            document.getElementById("charPageInfo").textContent = `${currentPage} OF ${totalPages}`;
+            document.getElementById("charPrev").disabled = currentPage === 1;
+            document.getElementById("charNext").disabled = currentPage === totalPages;
+        }
+
+        async function deleteChar(id) {
+            const idx = CHARACTERS_DATA.findIndex(c => c.id === id);
+            if (idx === -1) {
+                return;
+            }
+
+            const character = CHARACTERS_DATA[idx];
+            const result = await Swal.fire({
+                title: "¿Eliminar personaje?",
+                text: `Esta seguro de eliminar a ${character.name}?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si, eliminar",
+                cancelButtonText: "Cancelar",
+                confirmButtonColor: "#F5484D",
+                cancelButtonColor: "#16161D",
+                background: "#1F1F29",
+                color: "#F5F1E8"
+            });
+
+            if (!result.isConfirmed) {
+                return;
+            }
+
+            CHARACTERS_DATA.splice(idx, 1);
+
+            if (currentPage > getTotalPages()) {
+                currentPage = getTotalPages();
+            }
+
+            renderTable();
+
+            Swal.fire({
+                title: "Eliminado",
+                text: `${character.name} fue eliminado correctamente.`,
+                icon: "success",
+                timer: 1400,
+                showConfirmButton: false,
+                background: "#1F1F29",
+                color: "#F5F1E8"
+            });
+        }
+
+        function viewChar(id) {
+            window.location.href = `characters/view-character.html?id=${id}`;
+        }
+        document.getElementById("charPrev").addEventListener("click", () => {
+            if (currentPage > 1) { currentPage--; renderTable(); }
+        });
+        document.getElementById("charNext").addEventListener("click", () => {
+            if (currentPage < getTotalPages()) { currentPage++; renderTable(); }
+        });
+        document.getElementById("charAddBtn").addEventListener("click", () => {
+            window.location.href = "characters/add-character.html";
+        });
+
+        function editChar(id) {
+            window.location.href = `characters/edit-character.html?id=${id}`;
+        }
+
+        document.getElementById("charAddBtn").addEventListener("click", () => {
+            window.location.href = "characters/add-character.html";
+        });
+
+        renderTable();
+    </script>
+</body>
+
+</html>

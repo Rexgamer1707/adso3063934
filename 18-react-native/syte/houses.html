@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Clover - Houses</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <main class="mobile-stage">
+        <section class="houses-view app-view is-active">
+
+            <button class="menu-trigger char-menu-trigger" type="button" aria-label="Abrir menu" aria-expanded="false">
+                <img class="clover-logo" src="img/clover-logo.svg" alt="">
+            </button>
+
+            <div class="char-avatar-wrap">
+                <div class="char-avatar">
+                    <img src="img/house-turret.svg" alt="Houses">
+                </div>
+            </div>
+
+            <h1 class="char-title">HOUSES</h1>
+
+            <div class="char-toolbar">
+                <button class="char-add-btn" id="houseAddBtn" type="button">+ ADD</button>
+            </div>
+
+            <div class="char-table-wrap">
+                <table class="char-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>NAME</th>
+                            <th>REGION</th>
+                            <th>CAPTAIN</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="houseTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="char-pagination">
+                <button class="char-page-btn" id="housePrev" type="button">&#8592;</button>
+                <span class="char-page-info" id="housePageInfo">1 OF 1</span>
+                <button class="char-page-btn" id="houseNext" type="button">&#8594;</button>
+            </div>
+
+        </section>
+
+        <button class="menu-backdrop" type="button" aria-label="Cerrar menu"></button>
+
+        <aside class="side-menu side-menu--dashboard" aria-hidden="true">
+            <nav class="side-menu-nav side-menu-nav--dashboard" aria-label="Menu principal">
+                <a href="dashboard.html" class="side-menu-item">
+                    <span>DASHBOARD</span>
+                    <img src="img/clover-logo.svg" alt="">
+                </a>
+                <a href="profile.html" class="side-menu-item">
+                    <span>MY PROFILE</span>
+                    <img src="img/profile.svg" alt="">
+                </a>
+                <a href="characters.html" class="side-menu-item">
+                    <span>CHARACTERS</span>
+                    <img src="img/raincoat.svg" alt="">
+                </a>
+                <a href="houses.html" class="side-menu-item active">
+                    <span>HOUSES</span>
+                    <img src="img/house-turret.svg" alt="">
+                </a>
+            </nav>
+            <button class="side-menu-logout" type="button">
+                LOGOUT
+                <img src="img/sign-out.svg" alt="">
+            </button>
+        </aside>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        const HOUSES_DATA = [
+            { id: 1, name: "BLACK BULLS", region: "CLOVER KINGDOM", captain: "YAMI SUKEHIRO" },
+            { id: 2, name: "GOLDEN DAWN", region: "CLOVER KINGDOM", captain: "WILLIAM VANGEANCE" },
+            { id: 3, name: "SILVER EAGLE", region: "CLOVER KINGDOM", captain: "NOZEL SILVA" },
+            { id: 4, name: "BLUE ROSE", region: "CLOVER KINGDOM", captain: "CHARLOTTE ROSELEI" },
+            { id: 5, name: "CRIMSON LION", region: "CLOVER KINGDOM", captain: "FUEGOLEON VERMILLION" },
+            { id: 6, name: "GREEN MANTIS", region: "CLOVER KINGDOM", captain: "JACK THE RIPPER" },
+            { id: 7, name: "CORAL PEACOCK", region: "CLOVER KINGDOM", captain: "DOROTHY UNSWORTH" },
+            { id: 8, name: "PURPLE ORC", region: "CLOVER KINGDOM", captain: "RILL BOISMORTIER" },
+            { id: 9, name: "AQUA DEER", region: "CLOVER KINGDOM", captain: "GUELDRE POIZOT" },
+            { id: 10, name: "DIAMOND KINGDOM", region: "DIAMOND KINGDOM", captain: "MORIS LIBARDIRT" },
+            { id: 11, name: "SPADE KINGDOM", region: "SPADE KINGDOM", captain: "DANTE ZOGRATIS" },
+            { id: 12, name: "HEART KINGDOM", region: "HEART KINGDOM", captain: "LOLOPECHKA" },
+        ];
+
+        const PAGE_SIZE = 14;
+        let currentPage = 1;
+
+        function getTotalPages() {
+            return Math.max(1, Math.ceil(HOUSES_DATA.length / PAGE_SIZE));
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById("houseTableBody");
+            const start = (currentPage - 1) * PAGE_SIZE;
+            const slice = HOUSES_DATA.slice(start, start + PAGE_SIZE);
+            const totalPages = getTotalPages();
+
+            tbody.innerHTML = slice.map(h => `
+        <tr>
+            <td>${h.id}</td>
+            <td>${h.name}</td>
+            <td>${h.region}</td>
+            <td>${h.captain}</td>
+            <td class="char-actions">
+                <button class="char-action-btn" title="Ver" onclick="viewHouse(${h.id})"><img src="img/eye.svg" alt="ver"></button>
+                <button class="char-action-btn" title="Editar" onclick="editHouse(${h.id})"><img src="img/pencil.svg" alt="editar"></button>
+                <button class="char-action-btn char-action-btn--del" title="Eliminar" onclick="deleteHouse(${h.id})"><img src="img/trash.svg" alt="eliminar"></button>
+            </td>
+        </tr>
+    `).join("");
+
+            document.getElementById("housePageInfo").textContent = `${currentPage} OF ${totalPages}`;
+            document.getElementById("housePrev").disabled = currentPage === 1;
+            document.getElementById("houseNext").disabled = currentPage === totalPages;
+        }
+
+        async function deleteHouse(id) {
+            const idx = HOUSES_DATA.findIndex(h => h.id === id);
+            if (idx === -1) return;
+
+            const house = HOUSES_DATA[idx];
+            const result = await Swal.fire({
+                title: "¿Eliminar escuadra?",
+                text: `¿Estás seguro de eliminar ${house.name}?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar",
+                confirmButtonColor: "#F5484D",
+                cancelButtonColor: "#16161D",
+                background: "#1F1F29",
+                color: "#F5F1E8"
+            });
+
+            if (!result.isConfirmed) return;
+
+            HOUSES_DATA.splice(idx, 1);
+            if (currentPage > getTotalPages()) currentPage = getTotalPages();
+            renderTable();
+
+            Swal.fire({
+                title: "Eliminado",
+                text: `${house.name} fue eliminada correctamente.`,
+                icon: "success",
+                timer: 1400,
+                showConfirmButton: false,
+                background: "#1F1F29",
+                color: "#F5F1E8"
+            });
+        }
+
+        function viewHouse(id) {
+            window.location.href = `houses/view-house.html?id=${id}`;
+        }
+
+        function editHouse(id) {
+            window.location.href = `houses/edit-house.html?id=${id}`;
+        }
+
+        document.getElementById("housePrev").addEventListener("click", () => {
+            if (currentPage > 1) { currentPage--; renderTable(); }
+        });
+        document.getElementById("houseNext").addEventListener("click", () => {
+            if (currentPage < getTotalPages()) { currentPage++; renderTable(); }
+        });
+        document.getElementById("houseAddBtn").addEventListener("click", () => {
+            window.location.href = "houses/add-house.html";
+        });
+
+        renderTable();
+    </script>
+</body>
+
+</html>
