@@ -32,10 +32,9 @@
                 <table class="char-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>NAME</th>
                             <th>MAGIC TYPE</th>
-                            <th>RANK</th>
+
                             <th>ACTIONS</th>
                         </tr>
                     </thead>
@@ -140,10 +139,9 @@
 
             tbody.innerHTML = slice.map(c => `
         <tr>
-            <td>${c.id}</td>
             <td>${c.name}</td>
             <td>${c.magic}</td>
-            <td>${c.rank}</td>
+
             <td class="char-actions">
     <button class="char-action-btn" title="Ver" onclick="viewChar(${c.id})"><img src="img/eye.svg" alt="ver"></button>
     <button class="char-action-btn" title="Editar" onclick="editChar(${c.id})"><img src="img/pencil.svg" alt="editar"></button>

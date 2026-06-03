@@ -33,9 +33,7 @@
                 <table class="char-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>NAME</th>
-                            <th>REGION</th>
                             <th>CAPTAIN</th>
                             <th>ACTIONS</th>
                         </tr>
@@ -112,9 +110,7 @@
 
             tbody.innerHTML = slice.map(h => `
         <tr>
-            <td>${h.id}</td>
             <td>${h.name}</td>
-            <td>${h.region}</td>
             <td>${h.captain}</td>
             <td class="char-actions">
                 <button class="char-action-btn" title="Ver" onclick="viewHouse(${h.id})"><img src="img/eye.svg" alt="ver"></button>
