@@ -430,7 +430,8 @@ loadDashboardData();
 const logoutBtn = document.querySelector(".side-menu-logout");
 if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
-        window.location.href = "login.html";
+        const isSubfolder = window.location.pathname.split("/").length > 3;
+        window.location.href = isSubfolder ? "../login.html" : "login.html";
     });
 }
 
